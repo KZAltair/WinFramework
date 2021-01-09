@@ -2,7 +2,7 @@
 
 Engine::Engine(Window& wnd)
 	:
-	ball(Vec2(300.0f, 300.0f), Vec2(100.0f, 100.0f)),
+	ball(Vec2(300.0f, 300.0f), Vec2(300.0f, 300.0f)),
 	walls(0.0f, 800.0f, 0.0f, 600.0f)
 {
 	Colors = wnd.GetColorBuffer();
