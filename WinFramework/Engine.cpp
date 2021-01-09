@@ -2,8 +2,7 @@
 
 Engine::Engine(Window& wnd)
 	:
-	ball(10, 400, 300),
-	screenRect(0,0,799,599)
+	ball(10, 400, 300)
 {
 	Colors = wnd.GetColorBuffer();
 }
@@ -41,10 +40,6 @@ void Engine::Update(Window& wnd)
 {
 	float dt = ft.Go();
 
-	if (ball.IsColliding(screenRect))
-	{
-
-	}
 	ball.Update(dt);
 }
 
@@ -54,6 +49,7 @@ void Engine::ComposeFrame()
 	gfx.ClearScreenSuperFast(Colors);
 	//gfx.DrawPixel(Colors, 100, 100, 255, 0, 0);
 	ball.DrawBall(gfx, Colors);
+
 }
 
 

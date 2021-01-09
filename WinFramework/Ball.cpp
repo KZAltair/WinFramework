@@ -4,8 +4,7 @@ Ball::Ball(int radius, float x, float y)
 	:
 	radius(radius),
 	x(x),
-	y(y),
-	rect(x,y,radius, radius)
+	y(y)
 {
 }
 
@@ -24,30 +23,6 @@ void Ball::DrawBall(Graphics& gfx, int* Colors)
 	}
 }
 
-bool Ball::IsColliding(const Rect& other)
-{
-	if (rect.IsOverlapping(other))
-	{
-		if (rect.x < other.x)
-		{
-			speed *= -1.0f;
-		}
-		else if (rect.width > other.width)
-		{
-			speed *= -1.0f;
-		}
-		else if (rect.y < other.y)
-		{
-			speed *= -1.0f;
-		}
-		else if (rect.height > other.height)
-		{
-			speed *= -1.0f;
-		}
-		return true;
-	}
-	return false;
-}
 
 void Ball::Update(float dt)
 {
@@ -55,7 +30,3 @@ void Ball::Update(float dt)
 	y += speed * dt;
 }
 
-Rect Ball::GetRect() const
-{
-	return rect;
-}

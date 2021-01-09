@@ -35,5 +35,4 @@ private:
 private:
 	//Game stuff here
 	Ball ball;
-	Rect screenRect;
 };
