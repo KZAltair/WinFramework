@@ -21,9 +21,16 @@ Window::Window(int width, int height, HINSTANCE hInstance)
 	wc.lpszClassName = pClassName;
 
 	RegisterClassExA(&wc);
+	// create window & get hWnd
+	RECT wr;
+	wr.left = 350;
+	wr.right = WindowWidth + wr.left;
+	wr.top = 100;
+	wr.bottom = WindowHeight + wr.top;
+	AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE);
 
 	hwnd = CreateWindowExA(0, pClassName, "Windows Framework", WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
-		CW_USEDEFAULT, CW_USEDEFAULT, WindowWidth, WindowHeight, nullptr, nullptr, hInst, this);
+		wr.left, wr.top, wr.right - wr.left, wr.bottom - wr.top, nullptr, nullptr, hInst, this);
 
 	ShowWindow(hwnd, SW_SHOWDEFAULT);
 	//UpdateWindow(hwnd);
