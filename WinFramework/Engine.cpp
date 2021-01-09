@@ -2,7 +2,8 @@
 
 Engine::Engine(Window& wnd)
 	:
-	ball(10, 400, 300)
+	ball(Vec2(300.0f, 300.0f), Vec2(100.0f, 100.0f)),
+	walls(0.0f, 800.0f, 0.0f, 600.0f)
 {
 	Colors = wnd.GetColorBuffer();
 }
@@ -39,8 +40,8 @@ void Engine::Run(Window& wnd)
 void Engine::Update(Window& wnd)
 {
 	float dt = ft.Go();
-
 	ball.Update(dt);
+	ball.DoWallCollision(walls);
 }
 
 void Engine::ComposeFrame()
@@ -48,8 +49,7 @@ void Engine::ComposeFrame()
 	//gfx.FillScreenFast(Colors,255, 0, 0);
 	gfx.ClearScreenSuperFast(Colors);
 	//gfx.DrawPixel(Colors, 100, 100, 255, 0, 0);
-	ball.DrawBall(gfx, Colors);
-
+	ball.Draw(gfx, Colors);
 }
 
 

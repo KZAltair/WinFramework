@@ -25,10 +25,10 @@ void Graphics::ClearScreenSuperFast(int* Colors)
 
 void Graphics::DrawPixel(int* Colors, int x, int y, unsigned char r, unsigned char g, unsigned char b)
 {
-	assert(x > 0);
-	assert(x < 800 - 1);
-	assert(y > 0);
-	assert(y < 600 - 1);
+	assert(x >= 0);
+	assert(x <= 800);
+	assert(y >= 0);
+	assert(y <= 600);
 	Colors[y * 800 + x] = (r << 16) | (g << 8) | b;
 }
 
