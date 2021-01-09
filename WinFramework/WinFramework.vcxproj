@@ -166,10 +166,6 @@
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Helper.txt" />
-    <Text Include="M.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Keyboard.h" />

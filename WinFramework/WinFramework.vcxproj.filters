@@ -38,10 +38,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Helper.txt" />
-    <Text Include="M.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
