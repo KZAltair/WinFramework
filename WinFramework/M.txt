@@ -1,0 +1,302 @@
+#include <Windows.h>
+#include <string>
+#include "Timer.h"
+#include <thread>
+#include <assert.h>
+
+bool isRunning = false;
+Timer ft;
+BITMAPINFO bmInfo = {};
+int* Colors = nullptr;
+int x = 50;
+int y = 50;
+
+void DrawPixel(int x, int y, unsigned char r, unsigned char g, unsigned char b)
+{
+	assert(x > 0);
+	assert(x < bmInfo.bmiHeader.biWidth);
+	assert(y > 0);
+	assert(y < (bmInfo.bmiHeader.biHeight * -1));
+	Colors[y * bmInfo.bmiHeader.biWidth + x] = (r << 16) | (g << 8) | b;
+}
+
+//Very slow
+void ClearScreen(unsigned char r, unsigned char g, unsigned char b)
+{
+	char* Channel = (char*)Colors;
+	for (int y = 0; y < 600; ++y)
+	{
+		for (int x = 0; x < 800; ++x)
+		{
+			//RGBA assumed
+			//BGRA fact
+			//Blue
+			*Channel = b;
+			Channel++;
+			//Green
+			*Channel = g;
+			Channel++;
+			//Red
+			*Channel = r;
+			Channel++;
+			//Alpha
+			*Channel = 0;
+			Channel++;
+		}
+
+	}
+}
+void FillScreenFast(unsigned char r, unsigned char g, unsigned char b)
+{
+
+	for (int* i = Colors, *end = &Colors[800 * 600]; i < end; i++)
+	{
+		*i = (r << 16) | (g << 8) | b;
+	}
+}
+
+//Super fast
+void ClearScreenSuperFast()
+{
+	memset(Colors,0,800 * 600 * 4);
+}
+
+void DrawRect(int x, int y, int width, int height, unsigned char r, unsigned char g, unsigned char b)
+{
+	for (int sy = 0; sy < height; sy++)
+	{
+		for (int sx = 0; sx < width; sx++)
+		{
+			DrawPixel(x + sx, y + sy, r, g, b);
+		}
+	}
+}
+
+void ResizeDIB(int BitmapWidth, int BitmapHeight)
+{
+	bmInfo.bmiHeader.biSize = sizeof(BITMAPINFO);
+	bmInfo.bmiHeader.biWidth = BitmapWidth;
+	bmInfo.bmiHeader.biHeight = -BitmapHeight;
+	bmInfo.bmiHeader.biPlanes = 1;
+	bmInfo.bmiHeader.biBitCount = 32;
+	bmInfo.bmiHeader.biCompression = BI_RGB;
+
+	Colors = new int[BitmapWidth * BitmapHeight];
+
+	ClearScreenSuperFast();
+}
+
+void Win32UpdateWindow(HDC hdc, int BitmapWidth, int BitmapHeight)
+{
+	StretchDIBits(
+		hdc,
+		0,
+		0,
+		BitmapWidth,
+		BitmapHeight,
+		0,
+		0,
+		BitmapWidth,
+		BitmapHeight,
+		Colors,
+		&bmInfo,
+		DIB_RGB_COLORS,
+		SRCCOPY
+	);
+}
+
+LRESULT CALLBACK WndProc(
+	HWND   hwnd,
+	UINT   msg,
+	WPARAM wParam,
+	LPARAM lParam
+)
+{
+	switch (msg)
+	{
+		case WM_DESTROY:
+		{
+
+			PostQuitMessage(0);
+			isRunning = false;
+		}break;
+		case WM_QUIT:
+		{
+			PostQuitMessage(0);
+			isRunning = false;
+		}break;
+		case WM_CREATE:
+		{
+			isRunning = true;
+		}break;
+		case WM_SIZE:
+		{
+			RECT rect;
+			GetWindowRect(hwnd, &rect);
+			int WindowWidth = rect.right - rect.left;
+			int WindowHeight = rect.bottom - rect.top;
+			ResizeDIB(WindowWidth, WindowHeight);
+		}break;
+		case WM_PAINT:
+		{
+			PAINTSTRUCT pPaintStruct;
+			HDC hdc = BeginPaint(hwnd, &pPaintStruct);
+			
+			int WindowWidth = pPaintStruct.rcPaint.right - pPaintStruct.rcPaint.left;
+			int WindowHeight = pPaintStruct.rcPaint.bottom - pPaintStruct.rcPaint.top;
+			Win32UpdateWindow(hdc, WindowWidth, WindowHeight);
+			EndPaint(hwnd, &pPaintStruct);
+		}break;
+		case WM_SYSKEYDOWN:
+		case WM_SYSKEYUP:
+		case WM_KEYDOWN:
+		case WM_KEYUP:
+		{
+			WPARAM VKCode = wParam;
+			if (VKCode == 'A')
+			{
+				x -= 1;
+			}
+			if (VKCode == 'D')
+			{
+				x += 1;
+			}
+			if (VKCode == 'W')
+			{
+				y -= 1;
+			}
+			if (VKCode == 'S')
+			{
+				y += 1;
+			}
+		}break;
+		case WM_MOUSEMOVE:
+		{
+			POINTS pt = MAKEPOINTS(lParam);
+			if (pt.x > 0 && pt.x < 800 && pt.y > 0 && pt.y < 600)
+			{
+				//x = pt.x;
+				//y = pt.y;
+			}
+		}break;
+		case WM_LBUTTONDOWN:
+		{
+			POINTS pt = MAKEPOINTS(lParam);
+			x = pt.x;
+			y = pt.y;
+
+		}break;
+		case WM_LBUTTONUP:
+		{
+			POINTS pt = MAKEPOINTS(lParam);
+			x = pt.x;
+			y = pt.y;
+		}break;
+		case WM_RBUTTONDOWN:
+		{
+			POINTS pt = MAKEPOINTS(lParam);
+			x = pt.x;
+			y = pt.y;
+
+		}break;
+		case WM_RBUTTONUP:
+		{
+
+		}break;
+		case WM_CHAR:
+		{
+			std::string m;
+			m.push_back(wParam);
+			SetWindowTextA(hwnd, m.c_str());
+		}break;
+	}
+	return DefWindowProcA(hwnd, msg, wParam, lParam);
+}
+
+int WINAPI WinMain(
+	HINSTANCE hInst,
+	HINSTANCE hPrevInstance,
+	LPSTR     lpCmdLine,
+	int       nShowCmd
+)
+{
+	const auto pClassName = "WinFramework";
+	WNDCLASSEXA wc = {};
+	wc.cbSize = sizeof(wc);
+	wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc = WndProc;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = hInst;
+	wc.hIcon = nullptr;
+	wc.hCursor = nullptr;
+	wc.hbrBackground = nullptr;
+	wc.lpszMenuName = nullptr;
+	wc.lpszClassName = pClassName;
+
+	RegisterClassExA(&wc);
+
+	HWND windowHandle = CreateWindowExA(0, pClassName, "Windows Framework", WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
+		CW_USEDEFAULT, CW_USEDEFAULT, 800, 600, nullptr, nullptr, hInst, nullptr);
+
+	ShowWindow(windowHandle, SW_SHOWDEFAULT);
+
+	const float FPSMS = 1.0f / 30.0f;
+	float bench = 0.0f;
+	std::string winName = "Windows Framework ";
+	std::string counter;
+	std::string finTitle;
+	float cX = 0;
+	while(isRunning)
+	{
+		float dt = ft.Go();
+		bench += dt;
+
+		std::chrono::duration<float> ThreadSleepTime(FPSMS - bench);
+		if (bench < FPSMS)
+		{
+			std::this_thread::sleep_for(ThreadSleepTime);
+		}
+		else
+		{
+			bench = 0.0f;
+		}
+		MSG msg;
+		counter = std::to_string(cX);
+		finTitle = winName + counter;
+		
+		if (PeekMessageA(
+			&msg,
+			windowHandle,
+			0,
+			0,
+			PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+
+		//DrawRect(150, 150, 150, 50, 255, 0, 0);
+		//ClearScreen(255, 0, 0);
+		auto start = std::chrono::steady_clock::now();
+		FillScreenFast(0, 0, 0);
+		DrawRect(x, y, 50, 50, 255, 0, 0);
+		//ClearScreen(255, 0, 0);
+		auto end = std::chrono::steady_clock::now();
+		std::chrono::duration<float> c = end - start;
+		std::string clout = std::to_string(c.count()) + "\n";
+		OutputDebugStringA(clout.c_str());
+
+		SetWindowTextA(windowHandle, finTitle.c_str());
+		cX = 1.0f / ThreadSleepTime.count();
+
+		RECT rect;
+		GetWindowRect(windowHandle, &rect);
+		int WindowWidth = rect.right - rect.left;
+		int WindowHeight = rect.bottom - rect.top;
+		HDC hdc = GetDC(windowHandle);
+		Win32UpdateWindow(hdc, WindowWidth, WindowHeight);
+	}
+	delete[] Colors;
+	return 0;
+}
