@@ -16,6 +16,8 @@ int WINAPI WinMain(
 	{
 		//Call Engine object
 		engine.Run(wnd);
+
+		//Added to github
 	}
 	return 0;
 }
