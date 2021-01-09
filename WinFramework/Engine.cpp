@@ -52,6 +52,7 @@ void Engine::ComposeFrame()
 	gfx.ClearScreenSuperFast(Colors);
 	//gfx.DrawPixel(Colors, 100, 100, 255, 0, 0);
 	//Test
+	//Test
 	for (int sy = 1; sy < 20; sy++)
 	{
 		for (int sx = 1; sx < 20; sx++)
