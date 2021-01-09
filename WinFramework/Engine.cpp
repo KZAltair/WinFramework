@@ -2,7 +2,8 @@
 
 Engine::Engine(Window& wnd)
 	:
-	ball(10, 400, 300)
+	ball(10, 400, 300),
+	screenRect(0,0,799,599)
 {
 	Colors = wnd.GetColorBuffer();
 }
@@ -38,6 +39,13 @@ void Engine::Run(Window& wnd)
 
 void Engine::Update(Window& wnd)
 {
+	float dt = ft.Go();
+
+	if (ball.IsColliding(screenRect))
+	{
+
+	}
+	ball.Update(dt);
 }
 
 void Engine::ComposeFrame()
