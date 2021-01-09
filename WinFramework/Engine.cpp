@@ -1,6 +1,8 @@
 #include "Engine.h"
 
 Engine::Engine(Window& wnd)
+	:
+	ball(10, 400, 300)
 {
 	Colors = wnd.GetColorBuffer();
 }
@@ -36,14 +38,6 @@ void Engine::Run(Window& wnd)
 
 void Engine::Update(Window& wnd)
 {
-	//Test
-	/*if (wnd.kbd.KeyIsPressed('W'))
-	{
-		OutputDebugStringA("W is down\n");
-	}
-	*/
-	x = wnd.mouse.GetPosX();
-	y = wnd.mouse.GetPosY();
 }
 
 void Engine::ComposeFrame()
@@ -51,15 +45,7 @@ void Engine::ComposeFrame()
 	//gfx.FillScreenFast(Colors,255, 0, 0);
 	gfx.ClearScreenSuperFast(Colors);
 	//gfx.DrawPixel(Colors, 100, 100, 255, 0, 0);
-	//Test
-	//Test
-	for (int sy = 1; sy < 20; sy++)
-	{
-		for (int sx = 1; sx < 20; sx++)
-		{
-			gfx.DrawPixel(Colors, sx + x, sy + y, 255, 0, 0);
-		}
-	}
+	ball.DrawBall(gfx, Colors);
 }
 
 

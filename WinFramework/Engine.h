@@ -5,6 +5,7 @@
 #include <string>
 //TODO: remake this from sleep to thread
 #include <thread>
+#include "Ball.h"
 
 class Engine
 {
@@ -33,6 +34,5 @@ private:
 
 private:
 	//Game stuff here
-	int x = 10;
-	int y = 10;
+	Ball ball;
 };
