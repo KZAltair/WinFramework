@@ -7,6 +7,7 @@
 #include <thread>
 #include "Ball.h"
 #include "Brick.h"
+#include "Paddle.h"
 
 class Engine
 {
@@ -41,5 +42,6 @@ private:
 	//Game stuff here
 	Ball ball;
 	Brick brick;
+	Paddle pad;
 	RectF walls;
 };
