@@ -11,11 +11,25 @@ Brick::Brick(const RectF& rect_in, unsigned char r, unsigned char g, unsigned ch
 
 void Brick::Draw(Graphics& gfx, int* Colors)
 {
-	for (int sy = (int)rect.top; sy < (int)rect.bottom; sy++)
+	if (!destroyed)
 	{
-		for (int sx = (int)rect.left; sx < (int)rect.right; sx++)
+		for (int sy = (int)rect.top; sy < (int)rect.bottom; sy++)
 		{
-			gfx.DrawPixel(Colors, sx, sy, R, G, B);
+			for (int sx = (int)rect.left; sx < (int)rect.right; sx++)
+			{
+				gfx.DrawPixel(Colors, sx, sy, R, G, B);
+			}
 		}
 	}
+}
+
+bool Brick::DoBallCollision(Ball& ball)
+{
+	if (!destroyed && rect.IsOverlappingWith(ball.GetRect()))
+	{
+		ball.ReboundY();
+		destroyed = true;
+		return true;
+	}
+	return false;
 }

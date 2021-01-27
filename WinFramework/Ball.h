@@ -16,7 +16,7 @@ public:
 	void Update(float dt);
 
 private:
-	static constexpr float radius = 10.0f;
+	static constexpr float radius = 5.0f;
 	Vec2 pos;
 	Vec2 vel;
 };

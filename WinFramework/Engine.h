@@ -6,6 +6,7 @@
 //TODO: remake this from sleep to thread
 #include <thread>
 #include "Ball.h"
+#include "Brick.h"
 
 class Engine
 {
@@ -39,5 +40,6 @@ private:
 private:
 	//Game stuff here
 	Ball ball;
+	Brick brick;
 	RectF walls;
 };
