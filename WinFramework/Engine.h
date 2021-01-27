@@ -19,19 +19,23 @@ public:
 private:
 	void ComposeFrame();
 	void Update(class Window& wnd);
+	LARGE_INTEGER EngineGetWallClock() const;
+	float EngineGetSecondsElapsed(LARGE_INTEGER Start, LARGE_INTEGER End) const;
 private:
 	Graphics gfx;
 	int* Colors;
 	Timer ft;
 
 private:
+	LARGE_INTEGER PerfCountFrequecyResult;
+	bool SleepIsGranular = false;
+	float PerfCountFrequency;
 	const float FPSMS = 1.0f / 30.0f;
-	float bench = 0.0f;
+
 	std::string winName = "Windows Framework ";
 	std::string counter;
 	std::string finTitle;
 	float cX = 0;
-
 private:
 	//Game stuff here
 	Ball ball;

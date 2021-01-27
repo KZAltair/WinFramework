@@ -6,6 +6,9 @@ Engine::Engine(Window& wnd)
 	walls(0.0f, 800.0f, 0.0f, 600.0f)
 {
 	Colors = wnd.GetColorBuffer();
+	QueryPerformanceFrequency(&PerfCountFrequecyResult);
+	PerfCountFrequency = (float)(PerfCountFrequecyResult.QuadPart);
+	SleepIsGranular = (timeBeginPeriod(1) == TIMERR_NOERROR);
 }
 
 Engine::~Engine()
@@ -15,26 +18,32 @@ Engine::~Engine()
 void Engine::Run(Window& wnd)
 {
 	//Thread sleep to stop burning cycles
-	float dt = ft.Go();
-	bench += dt;
-	std::chrono::duration<float> ThreadSleepTime(FPSMS - bench);
-	if (bench < FPSMS)
+	LARGE_INTEGER LastCounter = EngineGetWallClock();
+	
+	LARGE_INTEGER WorkCounter = EngineGetWallClock();
+
+	float WorkSecondsElapsed = EngineGetSecondsElapsed(LastCounter, WorkCounter);
+	float SecondsElapsedForFrame = WorkSecondsElapsed;
+
+	while (SecondsElapsedForFrame < FPSMS)
 	{
-		//Windows native command to hold thread cycles
-		Sleep(DWORD(ThreadSleepTime.count() * 1000.0f));
+		if (SleepIsGranular)
+		{
+			DWORD SleepMS = (DWORD)(1000.0f * (FPSMS - SecondsElapsedForFrame));
+			Sleep(SleepMS);
+		}
+		SecondsElapsedForFrame = EngineGetSecondsElapsed(LastCounter, EngineGetWallClock());
 	}
-	else
-	{
-		bench = 0.0f;
-	}
+
 	counter = std::to_string(cX);
 	finTitle = winName + counter;
 	SetWindowTextA(wnd.GetCustomWindow(), finTitle.c_str());
-	cX = 1.0f / ThreadSleepTime.count();
-
-
+	cX = 1.0f / SecondsElapsedForFrame;
 	Update(wnd);
 	ComposeFrame();
+
+	LARGE_INTEGER EndCounter = EngineGetWallClock();
+	LastCounter = EndCounter;
 }
 
 void Engine::Update(Window& wnd)
@@ -42,6 +51,19 @@ void Engine::Update(Window& wnd)
 	float dt = ft.Go();
 	ball.Update(dt);
 	ball.DoWallCollision(walls);
+}
+
+LARGE_INTEGER Engine::EngineGetWallClock() const
+{
+	LARGE_INTEGER Result;
+	QueryPerformanceCounter(&Result);
+	return Result;
+}
+
+float Engine::EngineGetSecondsElapsed(LARGE_INTEGER Start, LARGE_INTEGER End) const
+{
+	float Result = ((float)(End.QuadPart - Start.QuadPart) / PerfCountFrequency);
+	return Result;
 }
 
 void Engine::ComposeFrame()

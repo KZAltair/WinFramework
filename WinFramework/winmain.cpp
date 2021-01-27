@@ -1,5 +1,7 @@
 #include "Engine.h"
 
+#pragma comment(lib, "winmm.lib")
+
 int WINAPI WinMain(
 	HINSTANCE hInst,
 	HINSTANCE hPrevInstance,

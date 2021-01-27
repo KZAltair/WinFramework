@@ -7,6 +7,7 @@ Window::Window(int width, int height, HINSTANCE hInstance)
 	WindowWidth(width),
 	WindowHeight(height)
 {
+	ResizeDIB(WindowWidth, WindowHeight);
 	WNDCLASSEXA wc = {};
 	wc.cbSize = sizeof(wc);
 	wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -80,6 +81,11 @@ void Window::ClearScreenSuperFast()
 
 void Window::ResizeDIB(int BitmapWidth, int BitmapHeight)
 {
+	if (Colors)
+	{
+		delete[] Colors;
+		Colors = nullptr;
+	}
 	bmInfo.bmiHeader.biSize = sizeof(BITMAPINFO);
 	bmInfo.bmiHeader.biWidth = BitmapWidth;
 	bmInfo.bmiHeader.biHeight = -BitmapHeight;
@@ -97,8 +103,8 @@ void Window::UpdateWindowBuffer(HDC hdc, int BitmapWidth, int BitmapHeight)
 		hdc,
 		0,
 		0,
-		BitmapWidth,
-		BitmapHeight,
+		WindowWidth,
+		WindowHeight,
 		0,
 		0,
 		BitmapWidth,
@@ -108,6 +114,7 @@ void Window::UpdateWindowBuffer(HDC hdc, int BitmapWidth, int BitmapHeight)
 		DIB_RGB_COLORS,
 		SRCCOPY
 	);
+
 }
 
 int* Window::GetColorBuffer()
@@ -158,8 +165,9 @@ LRESULT Window::HandleMessage(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		}break;
 		case WM_SIZE:
 		{
-			ResizeDIB(WindowWidth, WindowHeight);
+			
 		}break;
+
 		case WM_KILLFOCUS:
 			kbd.ClearState();
 			break;
