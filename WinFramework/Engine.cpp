@@ -70,7 +70,10 @@ void Engine::Update(Window& wnd)
 	pad.Update(wnd.mouse, dt);
 	for (Brick& b : bricks)
 	{
-		b.DoBallCollision(ball);
+		if (b.DoBallCollision(ball))
+		{
+			break;
+		}
 	}
 	pad.DoBallCollision(ball);
 	ball.DoWallCollision(walls);
