@@ -13,9 +13,9 @@ void Brick::Draw(Graphics& gfx, int* Colors)
 {
 	if (!destroyed)
 	{
-		for (int sy = (int)rect.top; sy < (int)rect.bottom; sy++)
+		for (int sy = (int)(rect.top + padding); sy < (int)(rect.bottom - padding); sy++)
 		{
-			for (int sx = (int)rect.left; sx < (int)rect.right; sx++)
+			for (int sx = (int)(rect.left + padding); sx < (int)(rect.right - padding); sx++)
 			{
 				gfx.DrawPixel(Colors, sx, sy, R, G, B);
 			}

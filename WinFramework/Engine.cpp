@@ -3,7 +3,6 @@
 Engine::Engine(Window& wnd)
 	:
 	ball(Vec2(300.0f, 300.0f), Vec2(300.0f, 300.0f)),
-	brick(RectF(Vec2(200.0f, 200.0f), Vec2(250.0f, 225.0f)), 123,50,70),
 	pad(Vec2(400.0f, 500.0f), 75, 25, 255, 100, 75),
 	walls(0.0f, 800.0f, 0.0f, 600.0f)
 {
@@ -11,6 +10,22 @@ Engine::Engine(Window& wnd)
 	QueryPerformanceFrequency(&PerfCountFrequecyResult);
 	PerfCountFrequency = (float)(PerfCountFrequecyResult.QuadPart);
 	SleepIsGranular = (timeBeginPeriod(1) == TIMERR_NOERROR);
+
+	Vec2 topLeft = Vec2(100.0f, 50.0f);
+	int i = 0;
+	int changingColor = 50;
+	int stratingColor = 50;
+
+	for (int y = 0; y < Rows; y++)
+	{
+		for (int x = 0; x < Colls; x++)
+		{
+			bricks[i] = Brick(RectF(topLeft + Vec2((float)x * brickWidth, (float)y * brickHeight), 
+				topLeft + Vec2((float)x * brickWidth + brickWidth, (float)y * brickHeight + brickHeight)), 
+				y * changingColor + stratingColor, y * changingColor, y * changingColor + stratingColor);
+			i++;
+		}
+	}
 }
 
 Engine::~Engine()
@@ -53,7 +68,10 @@ void Engine::Update(Window& wnd)
 	float dt = ft.Go();
 	ball.Update(dt);
 	pad.Update(wnd.mouse, dt);
-	brick.DoBallCollision(ball);
+	for (Brick& b : bricks)
+	{
+		b.DoBallCollision(ball);
+	}
 	pad.DoBallCollision(ball);
 	ball.DoWallCollision(walls);
 	pad.DoWallCollision(walls);
@@ -79,7 +97,11 @@ void Engine::ComposeFrame()
 	//gfx.DrawPixel(Colors, 100, 100, 255, 0, 0);
 	ball.Draw(gfx, Colors);
 	pad.Draw(gfx, Colors);
-	brick.Draw(gfx, Colors);
+	for (Brick& b : bricks)
+	{
+		b.Draw(gfx, Colors);
+	}
+	
 }
 
 

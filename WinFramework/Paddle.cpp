@@ -22,6 +22,13 @@ void Paddle::Draw(Graphics& gfx, int* Colors)
 			gfx.DrawPixel(Colors, sx, sy, R, G, B);
 		}
 	}
+	for (int sy = (int)rect.top; sy < (int)rect.bottom; sy++)
+	{
+		for (int sx = (int)rect.left + 10; sx < (int)rect.right - 10; sx++)
+		{
+			gfx.DrawPixel(Colors, sx, sy, 50, 125, 125);
+		}
+	}
 }
 
 void Paddle::Update(Mouse& mouse, float dt)

@@ -40,8 +40,21 @@ private:
 	float cX = 0;
 private:
 	//Game stuff here
+	static constexpr float brickWidth = 50.0f;
+	static constexpr float brickHeight = 25.0f;
+	static constexpr int Rows = 4;
+	static constexpr int Colls = 12;
+	static constexpr int nBricks = Rows * Colls;
 	Ball ball;
-	Brick brick;
+	Brick bricks[nBricks];
 	Paddle pad;
 	RectF walls;
 };
+
+/*
+2. More accurate collision
+3. Gameplay: start game, end game
+4. Audio
+5. Text, glyphs
+
+*/
