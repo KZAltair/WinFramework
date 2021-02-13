@@ -2,7 +2,7 @@
 
 Engine::Engine(Window& wnd)
 	:
-	ball(Vec2(300.0f, 300.0f), Vec2(300.0f, 300.0f)),
+	ball(Vec2(300.0f, 300.0f), Vec2(100.0f, 100.0f)),
 	pad(Vec2(400.0f, 500.0f), 75, 25, 255, 100, 75),
 	walls(0.0f, 800.0f, 0.0f, 600.0f)
 {
@@ -26,6 +26,8 @@ Engine::Engine(Window& wnd)
 			i++;
 		}
 	}
+	testBrick = Brick(r, 255, 255, 255);
+	controlledBall = Ball(Vec2(200.0f, 200.0f), Vec2(0.0f, 0.0f));
 }
 
 Engine::~Engine()
@@ -68,16 +70,74 @@ void Engine::Update(Window& wnd)
 	float dt = ft.Go();
 	ball.Update(dt);
 	pad.Update(wnd.mouse, dt);
-	for (Brick& b : bricks)
+
+	bool collisionHappened = false;
+	float curColDistSq;
+	int curColIndex;
+
+	for (int i = 0; i < nBricks; i++)
 	{
-		if (b.DoBallCollision(ball))
+		if (bricks[i].CheckBallCollision(ball))
 		{
-			break;
+			const float newColDistSq = (ball.GetPosition() - bricks[i].GetCenter()).GetLengthSq();
+			if (collisionHappened)
+			{
+				if (newColDistSq < curColDistSq )
+				{
+					curColDistSq = newColDistSq;
+					curColIndex = i;
+				}
+			}
+			else
+			{
+				curColDistSq = newColDistSq;
+				curColIndex = i;
+				collisionHappened = true;
+			}
 		}
+	}
+	if (collisionHappened)
+	{
+		bricks[curColIndex].DoBallCollision(ball);
 	}
 	pad.DoBallCollision(ball);
 	ball.DoWallCollision(walls);
 	pad.DoWallCollision(walls);
+	Vec2 cp, cn;
+	float t = 0.0f;
+	
+	if (wnd.mouse.LeftIsPressed())
+	{
+		vMouse = Vec2((float)wnd.mouse.GetPosX(), (float)wnd.mouse.GetPosY());
+		ray_point = controlledBall.GetPosition();
+		
+		ray_direction = vMouse - ray_point;
+		in_vel = ray_direction.Normalize() * 300.0f;
+		
+	}
+	if (testBrick.DynamicRectVsRect(controlledBall.GetVelocity(), controlledBall.MakeRect(), r, cp, cn, t, dt))
+	{
+		expBrick = Brick(testBrick.GetExpRect(), 0, 255, 0);
+		testBrick = Brick(r, 255, 0, 0);
+		//in_vel += (cn * Vec2(std::abs(in_vel.x), std::abs(in_vel.y))) * (1.0 - t);
+		in_vel.Normalize();
+		in_vel += cn * 2.0f;
+		
+		in_vel = in_vel.Normalize() * 300.0f;
+
+		OutputDebugStringA((std::to_string(t) + "\n").c_str());
+	}
+	else
+	{
+		expBrick = Brick(r, 0, 0, 0);
+		testBrick = Brick(r, 255, 255, 255);
+
+	}
+
+	controlledBall.SetVelocity(in_vel);
+	controlledBall.Update(dt);
+	
+	
 }
 
 LARGE_INTEGER Engine::EngineGetWallClock() const
@@ -104,6 +164,11 @@ void Engine::ComposeFrame()
 	{
 		b.Draw(gfx, Colors);
 	}
+
+	controlledBall.Draw(gfx, Colors);
+	expBrick.Draw(gfx, Colors);
+	testBrick.Draw(gfx, Colors);
+	
 	
 }
 

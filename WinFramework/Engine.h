@@ -49,6 +49,14 @@ private:
 	Brick bricks[nBricks];
 	Paddle pad;
 	RectF walls;
+	Vec2 ray_point;
+	Vec2 vMouse;
+	RectF r = RectF(Vec2(200.0f, 300.0f), Vec2(300.0f, 400.0f));
+	Vec2 ray_direction;
+	Brick testBrick;
+	Brick expBrick;
+	Ball controlledBall;
+	Vec2 in_vel = { 0.0f, 0.0f };
 };
 
 /*

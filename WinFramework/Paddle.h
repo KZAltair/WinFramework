@@ -12,6 +12,7 @@ public:
 	void Update(Mouse& mouse, float dt);
 	bool DoBallCollision(Ball& ball);
 	void DoWallCollision(const RectF& walls);
+	RectF GetRect() const;
 private:
 	Vec2 pos;
 	int width;

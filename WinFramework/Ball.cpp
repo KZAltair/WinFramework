@@ -57,6 +57,11 @@ RectF Ball::GetRect() const
 	return RectF::FromCenter(pos, radius, radius);
 }
 
+RectF Ball::MakeRect() const
+{
+	return RectF(pos.x - radius, pos.x + radius, pos.y - radius, pos.y + radius);
+}
+
 void Ball::Draw(Graphics& gfx, int* Colors)
 {
 	const RectF rect = GetRect();
@@ -83,5 +88,15 @@ Vec2 Ball::GetVelocity() const
 Vec2 Ball::GetPosition() const
 {
 	return pos;
+}
+
+void Ball::SetVelocity(Vec2 in)
+{
+	vel = in;
+}
+
+void Ball::SetPos(Vec2 in)
+{
+	pos = in;
 }
 

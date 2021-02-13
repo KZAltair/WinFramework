@@ -1,4 +1,5 @@
 #include "Paddle.h"
+#include <cmath>
 
 Paddle::Paddle(const Vec2& pos_in, int width, int height, unsigned char r, unsigned char g, unsigned char b)
 	:
@@ -38,10 +39,22 @@ void Paddle::Update(Mouse& mouse, float dt)
 
 bool Paddle::DoBallCollision(Ball& ball)
 {
-	const RectF rect = RectF::FromCenter(pos, (float)(width / 2), (float)(height / 2));
+	const RectF rect = GetRect();
 	if (rect.IsOverlappingWith(ball.GetRect()))
 	{
-		ball.ReboundY();
+		const Vec2 ballPos = ball.GetPosition();
+		if (std::signbit(ball.GetVelocity().x) == std::signbit((ballPos - rect.GetCenter()).x))
+		{
+			ball.ReboundY();
+		}
+		else if (ballPos.x >= rect.left && ballPos.x <= rect.right)
+		{
+			ball.ReboundY();
+		}
+		else
+		{
+			ball.ReboundX();
+		}
 		return true;
 	}
 	return false;
@@ -61,4 +74,9 @@ void Paddle::DoWallCollision(const RectF& walls)
 			pos.x -= rect.right - walls.right;
 		}
 	}
+}
+
+RectF Paddle::GetRect() const
+{
+	return RectF::FromCenter(pos, (float)(width / 2), (float)(height /2));
 }
