@@ -51,6 +51,26 @@ void Brick::DoBallCollision(Ball& ball)
 	destroyed = true;
 }
 
+void Brick::DoTraceCollisionTest(Ball& ball, const RectF& target, Vec2& contact_point,
+	Vec2& contact_normal, float& contact_time, float ElapsedTime)
+{
+	if (!destroyed)
+	{
+		if (DynamicRectVsRect(ball.GetVelocity(), ball.MakeRect(), target, contact_point, contact_normal,
+			contact_time, ElapsedTime))
+		{
+			Vec2 newVel = ball.GetVelocity();
+			Vec2 ballVel = ball.GetVelocity();
+			ballVel.Normalize();
+			ballVel += contact_normal * 2.0f;
+			float len = newVel.GetLength();
+			ballVel = ballVel.Normalize() * len;
+			ball.SetVelocity(ballVel);
+			destroyed = true;
+		}
+	}
+}
+
 Vec2 Brick::GetCenter() const
 {
 	return rect.GetCenter();
@@ -123,4 +143,9 @@ bool Brick::DynamicRectVsRect(const Vec2& vel, const RectF& rect_in, const RectF
 RectF Brick::GetExpRect() const
 {
 	return expanded_target;
+}
+
+RectF Brick::GetOriginalRect() const
+{
+	return rect;
 }
