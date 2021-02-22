@@ -80,3 +80,20 @@ RectF Paddle::GetRect() const
 {
 	return RectF::FromCenter(pos, (float)(width / 2), (float)(height /2));
 }
+
+void Paddle::DoTraceCollisionTest(Ball& ball, const RectF& target, Vec2& contact_point,
+	Vec2& contact_normal, float& contact_time, float ElapsedTime)
+{
+	/*if (DynamicRectVsRect(ball.GetVelocity(), ball.MakeRect(), target, contact_point, contact_normal,
+			contact_time, ElapsedTime))
+	{
+			Vec2 newVel = ball.GetVelocity();
+			Vec2 ballVel = ball.GetVelocity();
+			ballVel.Normalize();
+			ballVel += contact_normal * 2.0f;
+			float len = newVel.GetLength();
+			ballVel = ballVel.Normalize() * len;
+			ball.SetVelocity(ballVel);
+	}
+	*/
+}

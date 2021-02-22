@@ -13,6 +13,8 @@ public:
 	bool DoBallCollision(Ball& ball);
 	void DoWallCollision(const RectF& walls);
 	RectF GetRect() const;
+	void DoTraceCollisionTest(Ball& ball, const RectF& target, Vec2& contact_point,
+		Vec2& contact_normal, float& contact_time, float ElapsedTime);
 private:
 	Vec2 pos;
 	int width;
