@@ -10,7 +10,8 @@ Paddle::Paddle(const Vec2& pos_in, int width, int height, unsigned char r, unsig
 	G(g),
 	B(b)
 {
-	
+	vel = { 0.0, 0.0f };
+	speed = 0.0f;
 }
 
 void Paddle::Draw(Graphics& gfx, int* Colors)
@@ -34,7 +35,10 @@ void Paddle::Draw(Graphics& gfx, int* Colors)
 
 void Paddle::Update(Mouse& mouse, float dt)
 {
+	Vec2 oldPos = pos;
 	pos.x = (float)(mouse.GetPosX());
+	speed = (pos - oldPos).GetLength();
+	vel = (pos - oldPos).Normalize();
 }
 
 bool Paddle::DoBallCollision(Ball& ball)
@@ -84,16 +88,26 @@ RectF Paddle::GetRect() const
 void Paddle::DoTraceCollisionTest(Ball& ball, const RectF& target, Vec2& contact_point,
 	Vec2& contact_normal, float& contact_time, float ElapsedTime)
 {
-	/*if (DynamicRectVsRect(ball.GetVelocity(), ball.MakeRect(), target, contact_point, contact_normal,
+	if (cCollider.DynamicRectVsRect(ball.GetVelocity(), ball.MakeRect(), target, contact_point, contact_normal,
 			contact_time, ElapsedTime))
 	{
 			Vec2 newVel = ball.GetVelocity();
 			Vec2 ballVel = ball.GetVelocity();
 			ballVel.Normalize();
-			ballVel += contact_normal * 2.0f;
-			float len = newVel.GetLength();
-			ballVel = ballVel.Normalize() * len;
+			ballVel += (contact_normal * 2.0f) + vel;
+			len = newVel.GetLength() + speed;
+			len = std::min(len, maxSpeed);
+			ballVel = (ballVel.Normalize() * len);
 			ball.SetVelocity(ballVel);
 	}
-	*/
+}
+
+float Paddle::GetSpeed() const
+{
+	return len;
+}
+
+Vec2 Paddle::GetVelocity() const
+{
+	return vel;
 }

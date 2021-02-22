@@ -49,6 +49,7 @@ private:
 	Brick bricks[nBricks];
 	Paddle pad;
 	RectF walls;
+	bool clicked = false;
 };
 
 /*

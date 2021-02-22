@@ -2,7 +2,7 @@
 
 Engine::Engine(Window& wnd)
 	:
-	ball(Vec2(300.0f, 300.0f), Vec2(300.0f, 300.0f)),
+	ball(Vec2(400.0f, 450.0f), Vec2(0.0f, 0.0f)),
 	pad(Vec2(400.0f, 500.0f), 75, 25, 255, 100, 75),
 	walls(0.0f, 800.0f, 0.0f, 600.0f)
 {
@@ -65,50 +65,67 @@ void Engine::Run(Window& wnd)
 
 void Engine::Update(Window& wnd)
 {
-	float dt = ft.Go();
-	ball.Update(dt);
-	pad.Update(wnd.mouse, dt);
-	Vec2 cp, cn;
-	float t = 0.0f;
-
-	/*bool collisionHappened = false;
-	float curColDistSq;
-	int curColIndex;
-
-
-	for (int i = 0; i < nBricks; i++)
+	
+	if (wnd.mouse.LeftIsPressed() && !clicked)
 	{
-		if (bricks[i].CheckBallCollision(ball))
+		ball.SetVelocity(Vec2(150.0f, -150.0f));
+		clicked = true;
+	}
+	if (clicked)
+	{
+		float dt = ft.Go();
+		ball.Update(dt);
+		pad.Update(wnd.mouse, dt);
+		Vec2 bCp, bCn, pCp, pCn;
+		float bT = 0.0f;
+		float pT = 0.0f;
+
+		/*bool collisionHappened = false;
+		float curColDistSq;
+		int curColIndex;
+
+
+		for (int i = 0; i < nBricks; i++)
 		{
-			const float newColDistSq = (ball.GetPosition() - bricks[i].GetCenter()).GetLengthSq();
-			if (collisionHappened)
+			if (bricks[i].CheckBallCollision(ball))
 			{
-				if (newColDistSq < curColDistSq )
+				const float newColDistSq = (ball.GetPosition() - bricks[i].GetCenter()).GetLengthSq();
+				if (collisionHappened)
+				{
+					if (newColDistSq < curColDistSq )
+					{
+						curColDistSq = newColDistSq;
+						curColIndex = i;
+					}
+				}
+				else
 				{
 					curColDistSq = newColDistSq;
 					curColIndex = i;
+					collisionHappened = true;
 				}
 			}
-			else
-			{
-				curColDistSq = newColDistSq;
-				curColIndex = i;
-				collisionHappened = true;
-			}
 		}
+		if (collisionHappened)
+		{
+			bricks[curColIndex].DoBallCollision(ball);
+		}
+		*/
+		for (Brick& b : bricks)
+		{
+			b.DoTraceCollisionTest(ball, b.GetOriginalRect(), bCp, bCn, bT, dt);
+		}
+		pad.DoTraceCollisionTest(ball, pad.GetRect(), pCp, pCn, pT, dt);
+		//pad.DoBallCollision(ball);
+		ball.DoWallCollision(walls);
+		pad.DoWallCollision(walls);
+
+		//TODO: For debug purposes. Remove this later
+		std::string a = std::to_string(pad.GetSpeed()) + "\n";
+		OutputDebugStringA(a.c_str());
+
 	}
-	if (collisionHappened)
-	{
-		bricks[curColIndex].DoBallCollision(ball);
-	}
-	*/
-	for (Brick& b : bricks)
-	{
-		b.DoTraceCollisionTest(ball, b.GetOriginalRect(), cp, cn, t, dt);
-	}
-	pad.DoBallCollision(ball);
-	ball.DoWallCollision(walls);
-	pad.DoWallCollision(walls);
+	
 
 }
 
