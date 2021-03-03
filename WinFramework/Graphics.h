@@ -20,7 +20,8 @@ public:
 	void DrawLine(int* Colors, Vec2 p0, Vec2 p1, unsigned char r, unsigned char g, unsigned char b);
 	void DrawRect(int* Colors, const RectF& rect_in, unsigned char r, unsigned char g, unsigned char b);
 
-	void DrawSprite(int* in_buffer, int x, int y, const Surface& s);
-	void DrawSprite(int* in_buffer, int x, int y, const RectF& srcRect, const Surface& s);
-	void DrawSprite(int* in_buffer, int x, int y, RectF& srcRect, const RectF& clip, const Surface& s);
+	void DrawSpriteNonChroma(int* in_buffer, int x, int y, const Surface& s);
+	void DrawSpriteNonChroma(int* in_buffer, int x, int y, RectF& srcRect, const Surface& s);
+	void DrawSpriteNonChroma(int* in_buffer, int x, int y, RectF& srcRect, const RectF& clip, const Surface& s);
+	void DrawSprite(int* in_buffer, int x, int y, RectF& srcRect, const RectF& clip, const Surface& s, Color chroma = Colors::Magenta);
 };

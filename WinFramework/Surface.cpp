@@ -133,3 +133,8 @@ int Surface::GetHeight() const
 {
 	return height;
 }
+
+RectF Surface::GetRect() const
+{
+	return RectF(0.0f, (float)width, 0.0f, (float)height);
+}

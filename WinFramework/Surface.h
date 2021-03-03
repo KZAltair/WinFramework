@@ -1,5 +1,6 @@
 #pragma once
 #include "Colors.h"
+#include "RectF.h"
 #include <string>
 /*
 This class prepares a buffer and loads data into newly created buffer
@@ -17,6 +18,7 @@ public:
 	Color GetPixel(int x, int y) const;
 	int GetWidth() const;
 	int GetHeight() const;
+	RectF GetRect() const;
 private:
 	Color* pPixels = nullptr;
 	int width;

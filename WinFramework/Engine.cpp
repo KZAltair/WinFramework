@@ -69,7 +69,7 @@ void Engine::ComposeFrame()
 {
 	//gfx.FillScreenFast(Colors,255, 0, 0);
 	gfx.ClearScreenSuperFast(Colors);
-	gfx.DrawSprite(Colors, (int)x, (int)y, RectF( 10.0f, 50.0f, 0.0f, 90.0f ), RectF(0.0f, 800.0f, 0.0f, 600.0f), surf);
+	gfx.DrawSprite(Colors, (int)x, (int)y, RectF( 10.0f, 50.0f, 0.0f, 90.0f ), RectF(0.0f, 800.0f, 0.0f, 600.0f), surf, Color(0,128,128));
 }
 
 
