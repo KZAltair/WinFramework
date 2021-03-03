@@ -117,3 +117,18 @@ void Graphics::DrawSprite(int* in_buffer, int x, int y, const Surface& s)
 	}
 }
 
+void Graphics::DrawSprite(int* in_buffer, int x, int y, const RectF& srcRect, const Surface& s)
+{
+	assert(srcRect.left >= 0);
+	assert(srcRect.left <= s.GetWidth());
+	assert(srcRect.top >= 0);
+	assert(srcRect.bottom <= s.GetHeight());
+	for (int sy = (int)srcRect.top; sy < (int)srcRect.bottom; sy++)
+	{
+		for (int sx = (int)srcRect.left; sx < (int)srcRect.right; sx++)
+		{
+			DrawPixel(in_buffer, x + sx - (int)srcRect.left, y + sy - (int)srcRect.top, s.GetPixel(sx, sy));
+		}
+	}
+}
+

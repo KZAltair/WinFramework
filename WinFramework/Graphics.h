@@ -21,4 +21,5 @@ public:
 	void DrawRect(int* Colors, const RectF& rect_in, unsigned char r, unsigned char g, unsigned char b);
 
 	void DrawSprite(int* in_buffer, int x, int y, const Surface& s);
+	void DrawSprite(int* in_buffer, int x, int y, const RectF& srcRect, const Surface& s);
 };
