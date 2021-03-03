@@ -18,6 +18,14 @@ void Graphics::FillScreenFast(int* Colors, unsigned char r, unsigned char g, uns
 	}
 }
 
+void Graphics::FillScreenFast(int* Colors, Color c)
+{
+	for (int* i = Colors, *end = &Colors[800 * 600]; i < end; i++)
+	{
+		*i = c.dword;
+	}
+}
+
 void Graphics::ClearScreenSuperFast(int* Colors)
 {
 	std::memset(Colors, 0, 800 * 600 * 4);
