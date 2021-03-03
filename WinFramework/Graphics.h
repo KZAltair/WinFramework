@@ -23,5 +23,7 @@ public:
 	void DrawSpriteNonChroma(int* in_buffer, int x, int y, const Surface& s);
 	void DrawSpriteNonChroma(int* in_buffer, int x, int y, RectF& srcRect, const Surface& s);
 	void DrawSpriteNonChroma(int* in_buffer, int x, int y, RectF& srcRect, const RectF& clip, const Surface& s);
+	void DrawSprite(int* in_buffer, int x, int y, const Surface& s, Color chroma = Colors::Magenta);
+	void DrawSprite(int* in_buffer, int x, int y, RectF& srcRect, const Surface& s, Color chroma = Colors::Magenta);
 	void DrawSprite(int* in_buffer, int x, int y, RectF& srcRect, const RectF& clip, const Surface& s, Color chroma = Colors::Magenta);
 };

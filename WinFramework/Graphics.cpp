@@ -147,6 +147,16 @@ void Graphics::DrawSpriteNonChroma(int* in_buffer, int x, int y, RectF& srcRect,
 	}
 }
 
+void Graphics::DrawSprite(int* in_buffer, int x, int y, const Surface& s, Color chroma)
+{
+	DrawSprite(in_buffer, x, y, s.GetRect(), s, chroma);
+}
+
+void Graphics::DrawSprite(int* in_buffer, int x, int y, RectF& srcRect, const Surface& s, Color chroma)
+{
+	DrawSprite(in_buffer, x, y, srcRect, RectF(0.0f, 800.0f, 0.0f, 600.0f), s, chroma);
+}
+
 void Graphics::DrawSprite(int* in_buffer, int x, int y, RectF& srcRect, const RectF& clip, const Surface& s, Color chroma)
 {
 	assert(srcRect.left >= 0);
