@@ -18,25 +18,13 @@ public:
 		:
 		dword((x << 24u) | (r << 16u) | (g << 8u) | b)
 	{}
-	constexpr Color(float x, float r, float g, float b)
-		:
-		dword(((unsigned char)(x * 255.0f) << 24u) | ((unsigned char)(r * 255.0f) << 16u) | ((unsigned char)(g * 255.0f) << 8u) | (unsigned char)(b * 255.0f) )
-	{}
 	constexpr Color(unsigned char r, unsigned char g, unsigned char b)
 		:
 		dword((r << 16u) | (g << 8u) | b)
 	{}
-	constexpr Color(float r, float g, float b)
-		:
-		dword(((unsigned char)(r * 255.0f) << 16u) | ((unsigned char)(g * 255.0f) << 8u) | (unsigned char)(b * 255.0f))
-	{}
 	constexpr Color(Color col, unsigned char x)
 		:
 		Color((x << 24u) | col.dword)
-	{}
-	constexpr Color(Color col, float x)
-		:
-		Color(((unsigned char)(x * 255.0f) << 24u) | col.dword)
 	{}
 	Color& operator =(Color color)
 	{
