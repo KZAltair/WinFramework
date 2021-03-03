@@ -40,7 +40,7 @@ private:
 	float cX = 0;
 private:
 	//Game stuff here
-
+	Surface surf = Surface(100, 100);
 };
 
 /*

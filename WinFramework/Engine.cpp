@@ -6,6 +6,18 @@ Engine::Engine(Window& wnd)
 	QueryPerformanceFrequency(&PerfCountFrequecyResult);
 	PerfCountFrequency = (float)(PerfCountFrequecyResult.QuadPart);
 	SleepIsGranular = (timeBeginPeriod(1) == TIMERR_NOERROR);
+
+	for (int y = 0; y < surf.GetHeight(); y++)
+	{
+		for (int x = 0; x < surf.GetWidth(); x++)
+		{
+			surf.PutPixel(x, y, Color(
+				(x-25.0f)*(x-25.f) + (y - 25.f)*(y - 25.f),
+				(x - 50.0f) * (x - 50.f) + (y - 50.f) * (y - 50.f),
+				(x - 75.0f) * (x - 75.f) + (y - 75.f) * (y - 75.f)
+			));
+		}
+	}
 }
 
 Engine::~Engine()
@@ -67,6 +79,7 @@ void Engine::ComposeFrame()
 {
 	//gfx.FillScreenFast(Colors,255, 0, 0);
 	gfx.ClearScreenSuperFast(Colors);
+	gfx.DrawSprite(Colors, 100, 100, surf);
 }
 
 

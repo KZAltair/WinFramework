@@ -40,6 +40,15 @@ void Graphics::DrawPixel(int* Colors, int x, int y, unsigned char r, unsigned ch
 	Colors[y * 800 + x] = (r << 16) | (g << 8) | b;
 }
 
+void Graphics::DrawPixel(int* in_buffer, int x, int y, Color c)
+{
+	assert(x >= 0);
+	assert(x < 800);
+	assert(y >= 0);
+	assert(y < 600);
+	in_buffer[y * 800 + x] = c.dword;
+}
+
 void Graphics::DrawLine(int* Colors, Vec2 p0, Vec2 p1, unsigned char r, unsigned char g, unsigned char b)
 {
 	float m = 0.0f;
@@ -91,6 +100,19 @@ void Graphics::DrawRect(int* Colors, const RectF& rect_in, unsigned char r, unsi
 		for (int sx = (int)rect_in.left; sx < (int)rect_in.right; sx++)
 		{
 			DrawPixel(Colors, sx, sy, r, g, b);
+		}
+	}
+}
+
+void Graphics::DrawSprite(int* in_buffer, int x, int y, const Surface& s)
+{
+	const int width = s.GetWidth();
+	const int height = s.GetHeight();
+	for (int sy = 0; sy < height; sy++)
+	{
+		for (int sx = 0; sx < width; sx++)
+		{
+			DrawPixel(in_buffer, x + sx, y + sy, s.GetPixel(sx, sy));
 		}
 	}
 }
