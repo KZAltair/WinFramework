@@ -41,6 +41,7 @@ private:
 private:
 	//Game stuff here
 	Surface surf = Surface("robosheet.bmp");
+	float x, y;
 };
 
 /*

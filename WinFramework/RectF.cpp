@@ -42,3 +42,13 @@ Vec2 RectF::GetPos() const
 {
 	return Vec2(left, top);
 }
+
+float RectF::GetWidth() const
+{
+	return right - left;
+}
+
+float RectF::GetHeight() const
+{
+	return bottom - top;
+}

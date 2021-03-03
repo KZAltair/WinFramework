@@ -132,3 +132,36 @@ void Graphics::DrawSprite(int* in_buffer, int x, int y, const RectF& srcRect, co
 	}
 }
 
+void Graphics::DrawSprite(int* in_buffer, int x, int y, RectF& srcRect, const RectF& clip, const Surface& s)
+{
+	assert(srcRect.left >= 0);
+	assert(srcRect.left <= s.GetWidth());
+	assert(srcRect.top >= 0);
+	assert(srcRect.bottom <= s.GetHeight());
+	if ((float)x < clip.left)
+	{
+		srcRect.left += clip.left - (float)x;
+		x = (int)clip.left;
+	}
+	if ((float)y < clip.top)
+	{
+		srcRect.top += clip.top - (float)y;
+		y = (int)clip.top;
+	}
+	if ((float)x + srcRect.GetWidth() > clip.right)
+	{
+		srcRect.right -= (float)x + srcRect.GetWidth() - clip.right;
+	}
+	if ((float)y + srcRect.GetHeight() > clip.bottom)
+	{
+		srcRect.bottom -= (float)y + srcRect.GetHeight() - clip.bottom;
+	}
+	for (int sy = (int)srcRect.top; sy < (int)srcRect.bottom; sy++)
+	{
+		for (int sx = (int)srcRect.left; sx < (int)srcRect.right; sx++)
+		{
+			DrawPixel(in_buffer, x + sx - (int)srcRect.left, y + sy - (int)srcRect.top, s.GetPixel(sx, sy));
+		}
+	}
+}
+
