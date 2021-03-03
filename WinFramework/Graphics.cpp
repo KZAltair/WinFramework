@@ -48,11 +48,11 @@ void Graphics::DrawLine(int* Colors, Vec2 p0, Vec2 p1, unsigned char r, unsigned
 			std::swap(p0, p1);
 		}
 
-		const float b = p0.y - m * p0.x;
+		const float h = p0.y - m * p0.x;
 
 		for (int x = (int)p0.x; x < (int)p1.x; x++)
 		{
-			const float y = m * (float)x + b;
+			const float y = m * (float)x + h;
 			DrawPixel(Colors, x, (int)y, r, g, b);
 		}
 	}
@@ -74,5 +74,16 @@ void Graphics::DrawLine(int* Colors, Vec2 p0, Vec2 p1, unsigned char r, unsigned
 
 	
 	
+}
+
+void Graphics::DrawRect(int* Colors, const RectF& rect_in, unsigned char r, unsigned char g, unsigned char b)
+{
+	for (int sy = (int)rect_in.top; sy < (int)rect_in.bottom; sy++)
+	{
+		for (int sx = (int)rect_in.left; sx < (int)rect_in.right; sx++)
+		{
+			DrawPixel(Colors, sx, sy, r, g, b);
+		}
+	}
 }
 
